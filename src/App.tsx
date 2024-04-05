@@ -25,7 +25,7 @@ function App() {
     setTasks([
       ...tasks,
       {
-        id: new Date().getTime(), // Not a great way to generate IDs
+        id: new Date().getTime(),
         title: taskName,
         isCompleted: false,
       },
