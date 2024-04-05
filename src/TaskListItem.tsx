@@ -1,3 +1,62 @@
-export default function TaskListItem({ children }: React.PropsWithChildren) {
-  return <li>{children}</li>;
-}
+import React, { useState } from 'react';
+import { Task } from './types';
+
+type TaskListItemProps = {
+  task: Task;
+  onUpdateTask: (taskId: number, updatedTask: Task) => void;
+  onDeleteTask: (taskId: number) => void;
+};
+
+const TaskListItem: React.FC<TaskListItemProps> = ({
+  task,
+  onUpdateTask,
+  onDeleteTask,
+}) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTask, setEditedTask] = useState<Task>({ ...task });
+
+  const handleUpdateTask = () => {
+    onUpdateTask(task.id, editedTask);
+    setIsEditing(false);
+  };
+
+  const handleDeleteTask = () => {
+    onDeleteTask(task.id);
+  };
+
+  return (
+    <li>
+      {isEditing ? (
+        <div>
+          <input
+            type="text"
+            value={editedTask.title}
+            onChange={(e) =>
+              setEditedTask({ ...editedTask, title: e.target.value })
+            }
+            data-testid={`edit-input-${task.id}`}
+          />
+          <button onClick={handleUpdateTask}>Save</button>
+        </div>
+      ) : (
+        <div>
+          <span>{task.title}</span>
+          <button
+            onClick={() => setIsEditing(true)}
+            data-testid={`edit-button-${task.id}`}
+          >
+            Edit
+          </button>
+          <button
+            onClick={handleDeleteTask}
+            data-testid={`delete-button-${task.id}`}
+          >
+            Delete
+          </button>
+        </div>
+      )}
+    </li>
+  );
+};
+
+export default TaskListItem;

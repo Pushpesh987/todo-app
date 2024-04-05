@@ -71,4 +71,49 @@ describe('App', () => {
       expect(screen.queryAllByRole('listitem')).toHaveLength(1);
     });
   });
+
+  test('should update task when edit button is clicked', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const addButton = screen.getByRole('button', { name: 'Add' });
+
+    await user.type(input, 'Task to be updated');
+    await user.click(addButton);
+
+    const editButton = screen.getByTestId('edit-button-0');
+
+    await user.click(editButton);
+
+    const updatedTaskInput = screen.getByTestId('edit-input-0');
+
+    await user.clear(updatedTaskInput);
+    await user.type(updatedTaskInput, 'Updated Task');
+    const saveButton = screen.getByRole('button', { name: 'Save' });
+    await user.click(saveButton);
+
+    await waitFor(() => {
+      expect(screen.getByText('Updated Task')).toBeInTheDocument();
+    });
+  });
+
+  test('should delete task when delete button is clicked', async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const input = screen.getByRole('textbox', { name: 'Add Task:' });
+    const button = screen.getByRole('button', { name: 'Add' });
+
+    await user.type(input, 'Task to be deleted');
+    await user.click(button);
+
+    const deleteButton = screen.getByRole('button', { name: 'Delete' });
+
+    await user.click(deleteButton);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Task to be deleted')).not.toBeInTheDocument();
+    });
+  });
 });
