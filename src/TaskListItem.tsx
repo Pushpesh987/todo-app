@@ -34,25 +34,14 @@ const TaskListItem: React.FC<TaskListItemProps> = ({
             onChange={(e) =>
               setEditedTask({ ...editedTask, title: e.target.value })
             }
-            data-testid={`edit-input-${task.id}`}
           />
           <button onClick={handleUpdateTask}>Save</button>
         </div>
       ) : (
         <div>
           <span>{task.title}</span>
-          <button
-            onClick={() => setIsEditing(true)}
-            data-testid={`edit-button-${task.id}`}
-          >
-            Edit
-          </button>
-          <button
-            onClick={handleDeleteTask}
-            data-testid={`delete-button-${task.id}`}
-          >
-            Delete
-          </button>
+          <button onClick={() => setIsEditing(true)}>Edit</button>
+          <button onClick={handleDeleteTask}>Delete</button>
         </div>
       )}
     </li>
